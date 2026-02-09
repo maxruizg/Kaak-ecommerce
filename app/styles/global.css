@@ -1,0 +1,335 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fire (Primary) - Warm oranges */
+  --color-fire-50: #fff7ed;
+  --color-fire-100: #ffedd5;
+  --color-fire-200: #fed7aa;
+  --color-fire-300: #fdba74;
+  --color-fire-400: #fb923c;
+  --color-fire-500: #f97316;
+  --color-fire-600: #ea580c;
+  --color-fire-700: #c2410c;
+  --color-fire-800: #9a3412;
+  --color-fire-900: #7c2d12;
+
+  /* Ember (Accent) - Rich golds/ambers */
+  --color-ember-50: #fffbeb;
+  --color-ember-100: #fef3c7;
+  --color-ember-200: #fde68a;
+  --color-ember-300: #fcd34d;
+  --color-ember-400: #fbbf24;
+  --color-ember-500: #f59e0b;
+  --color-ember-600: #d97706;
+  --color-ember-700: #b45309;
+  --color-ember-800: #92400e;
+  --color-ember-900: #78350f;
+
+  /* Obsidian (Dark) - Deep warm blacks/grays */
+  --color-obsidian-50: #fafaf9;
+  --color-obsidian-100: #f5f5f4;
+  --color-obsidian-200: #e7e5e4;
+  --color-obsidian-300: #d6d3d1;
+  --color-obsidian-400: #a8a29e;
+  --color-obsidian-500: #78716c;
+  --color-obsidian-600: #57534e;
+  --color-obsidian-700: #44403c;
+  --color-obsidian-800: #292524;
+  --color-obsidian-900: #1c1917;
+  --color-obsidian-950: #0c0a09;
+
+  /* Jade (Success) */
+  --color-jade-400: #4ade80;
+  --color-jade-500: #22c55e;
+  --color-jade-600: #16a34a;
+  --color-jade-700: #15803d;
+
+  /* Crimson (Danger) */
+  --color-crimson-400: #f87171;
+  --color-crimson-500: #ef4444;
+  --color-crimson-600: #dc2626;
+  --color-crimson-700: #b91c1c;
+
+  /* Fonts */
+  --font-display: "Cinzel", serif;
+  --font-heading: "Josefin Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-fade-in-up: fade-in-up 0.6s ease-out forwards;
+  --animate-fade-in-down: fade-in-down 0.5s ease-out forwards;
+  --animate-slide-in-left: slide-in-left 0.6s ease-out forwards;
+  --animate-slide-in-right: slide-in-right 0.6s ease-out forwards;
+  --animate-scale-in: scale-in 0.4s ease-out forwards;
+  --animate-fire-glow: fire-glow 2s ease-in-out infinite;
+  --animate-ember-float: ember-float 3s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 3s ease-in-out infinite;
+  --animate-spin-slow: spin 8s linear infinite;
+}
+
+/* Keyframes */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fire-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.3), 0 0 40px rgba(249, 115, 22, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(249, 115, 22, 0.5), 0 0 60px rgba(249, 115, 22, 0.2); }
+}
+
+@keyframes ember-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-12px) scale(1.1); opacity: 1; }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-obsidian-100);
+  background-color: var(--color-obsidian-950);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Maya decorative patterns */
+.maya-divider {
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-fire-500) 0px,
+    var(--color-fire-500) 8px,
+    var(--color-ember-500) 8px,
+    var(--color-ember-500) 16px,
+    var(--color-fire-700) 16px,
+    var(--color-fire-700) 24px,
+    transparent 24px,
+    transparent 28px
+  );
+}
+
+.maya-divider-thick {
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-fire-600) 0px,
+    var(--color-fire-600) 12px,
+    var(--color-ember-500) 12px,
+    var(--color-ember-500) 24px,
+    var(--color-obsidian-800) 24px,
+    var(--color-obsidian-800) 28px,
+    transparent 28px,
+    transparent 32px
+  );
+}
+
+.maya-border {
+  clip-path: polygon(
+    0 8px, 8px 8px, 8px 0,
+    calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+    8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+  );
+}
+
+.maya-corner {
+  position: relative;
+}
+
+.maya-corner::before,
+.maya-corner::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--color-fire-500);
+}
+
+.maya-corner::before {
+  top: 0;
+  left: 0;
+  border-top: 3px solid;
+  border-left: 3px solid;
+}
+
+.maya-corner::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 3px solid;
+  border-right: 3px solid;
+}
+
+/* Glyph watermark */
+.glyph-accent {
+  position: relative;
+}
+
+.glyph-accent::before {
+  content: "𝌆";
+  position: absolute;
+  font-size: 12rem;
+  opacity: 0.07;
+  color: var(--color-fire-500);
+  text-shadow: 0 0 40px rgba(249, 115, 22, 0.3);
+  top: 50%;
+  right: -2rem;
+  transform: translateY(-50%) rotate(15deg);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Fire ember particles */
+.fire-particles {
+  position: relative;
+  overflow: hidden;
+}
+
+.fire-particles::before,
+.fire-particles::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-ember-400);
+  animation: ember-float 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.fire-particles::before {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.fire-particles::after {
+  top: 60%;
+  right: 15%;
+  animation-delay: 1.5s;
+}
+
+/* Lazy image styles */
+.lazy-image-container {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-obsidian-800);
+}
+
+.lazy-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.lazy-image.is-loaded {
+  opacity: 1;
+}
+
+.lazy-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    var(--color-obsidian-800) 25%,
+    var(--color-obsidian-700) 50%,
+    var(--color-obsidian-800) 75%
+  );
+  background-size: 200% 200%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Scroll animation helpers */
+.scroll-hidden {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-obsidian-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-obsidian-600);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fire-500);
+}
+
+/* Dark card utility */
+.dark-card {
+  background: rgba(28, 25, 23, 0.6);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(68, 64, 60, 0.5);
+  border-radius: 0.75rem;
+}
+
+/* Alternating dark section */
+.dark-section-alt {
+  background: radial-gradient(ellipse at bottom, rgba(124, 45, 18, 0.15) 0%, transparent 60%),
+              var(--color-obsidian-950);
+}

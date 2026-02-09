@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id            String           @id @default(cuid())
+  name          String
+  slug          String           @unique
+  description   String
+  mayaName      String?
+  categoryId    String
+  category      Category         @relation(fields: [categoryId], references: [id])
+  basePrice     Float
+  comparePrice  Float?
+  sku           String           @unique
+  isActive      Boolean          @default(true)
+  isFeatured    Boolean          @default(false)
+  isRentable    Boolean          @default(false)
+  freeShipping  Boolean          @default(false)
+  weight        Float?
+  guestCapacity String?
+  grillSize     String?
+  material      String?
+  includes      Json?
+  images        ProductImage[]
+  variants      ProductVariant[]
+  orderItems    OrderItem[]
+  rentals       RentalBooking[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  sortOrder Int     @default(0)
+  isPrimary Boolean @default(false)
+}
+
+model ProductVariant {
+  id         String      @id @default(cuid())
+  productId  String
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name       String
+  sku        String      @unique
+  price      Float
+  stock      Int         @default(0)
+  isActive   Boolean     @default(true)
+  orderItems OrderItem[]
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  firstName String
+  lastName  String
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+}
+
+model Order {
+  id               String      @id @default(cuid())
+  orderNumber      String      @unique
+  customerId       String
+  customer         Customer    @relation(fields: [customerId], references: [id])
+  status           String      @default("pending")
+  paymentStatus    String      @default("pending")
+  paymentIntentId  String?
+  subtotal         Float
+  shippingCost     Float       @default(0)
+  discount         Float       @default(0)
+  total            Float
+  promotionId      String?
+  promotion        Promotion?  @relation(fields: [promotionId], references: [id])
+  shippingAddress  Json
+  billingAddress   Json?
+  notes            String?
+  items            OrderItem[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String          @id @default(cuid())
+  orderId   String
+  order     Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product         @relation(fields: [productId], references: [id])
+  variantId String?
+  variant   ProductVariant? @relation(fields: [variantId], references: [id])
+  quantity  Int
+  unitPrice Float
+  total     Float
+}
+
+model Promotion {
+  id          String    @id @default(cuid())
+  name        String
+  code        String    @unique
+  description String?
+  type        String
+  value       Float
+  minPurchase Float?
+  maxUses     Int?
+  usedCount   Int       @default(0)
+  isActive    Boolean   @default(true)
+  startDate   DateTime?
+  endDate     DateTime?
+  orders      Order[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model RentalBooking {
+  id            String   @id @default(cuid())
+  bookingNumber String   @unique
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  customerName  String
+  customerEmail String
+  customerPhone String
+  eventDate     DateTime
+  eventAddress  String
+  guestCount    Int
+  status        String   @default("pending")
+  totalCost     Float
+  notes         String?
+  contractUrl   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model EventBooking {
+  id            String   @id @default(cuid())
+  bookingNumber String   @unique
+  serviceType   String
+  customerName  String
+  customerEmail String
+  customerPhone String
+  eventDate     DateTime
+  eventDuration Int      @default(4)
+  guestCount    Int
+  eventAddress  String
+  status        String   @default("pending")
+  totalCost     Float
+  menuDetails   String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
