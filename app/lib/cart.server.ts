@@ -15,10 +15,7 @@ export interface Cart {
   items: CartItem[];
 }
 
-const cartSessionSecret = process.env.SESSION_SECRET;
-if (!cartSessionSecret) {
-  throw new Error("SESSION_SECRET must be set");
-}
+const cartSessionSecret = process.env.SESSION_SECRET || "dev-secret-change-in-production";
 
 const cartStorage = createCookieSessionStorage({
   cookie: {
