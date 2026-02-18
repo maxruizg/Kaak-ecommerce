@@ -10,13 +10,22 @@ import { PageContainer } from "~/components/layout/PageContainer";
 import { ProductGallery } from "~/components/product/ProductGallery";
 import { ProductActions } from "~/components/product/ProductActions";
 import { Badge } from "~/components/ui/Badge";
+import { Icon } from "~/components/ui/Icon";
 import { MayaDivider } from "~/components/maya/MayaDivider";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.product) return [{ title: "Producto no encontrado — K'Á-AK" }];
+  const primaryImage = data.product.images.find((i) => i.isPrimary) || data.product.images[0];
   return [
     { title: `${data.product.name} — K'Á-AK Barriles Asadores` },
     { name: "description", content: data.product.description.slice(0, 160) },
+    { property: "og:title", content: `${data.product.name} — K'Á-AK` },
+    { property: "og:description", content: data.product.description.slice(0, 160) },
+    { property: "og:image", content: primaryImage?.url || "/og-image.jpg" },
+    { property: "og:type", content: "product" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: `${data.product.name} — K'Á-AK` },
+    { name: "twitter:image", content: primaryImage?.url || "/og-image.jpg" },
   ];
 };
 
@@ -98,14 +107,71 @@ export default function ProductDetail() {
   const navigation = useNavigation();
   const submittingIntent = navigation.formData?.get("intent") as string | undefined;
   const isSubmitting = navigation.state === "submitting";
-  const includes = product.includes ? JSON.parse(product.includes as string) : [];
+  const includes: string[] = product.includes
+    ? (typeof product.includes === "string" ? JSON.parse(product.includes) : product.includes)
+    : [];
   const primaryImage = product.images.find((i) => i.isPrimary) || product.images[0];
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: product.images.map((i) => i.url),
+    offers: {
+      "@type": "Offer",
+      price: product.basePrice,
+      priceCurrency: "MXN",
+      availability: "https://schema.org/InStock",
+    },
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <Navbar cartItemCount={cartItemCount} />
-      <main className="pt-20 md:pt-24 pb-16">
+      <main id="main-content" className="pt-20 md:pt-24 pb-16">
         <PageContainer>
+          {/* Lo Esencial — at-a-glance summary */}
+          {(product.guestCapacity || product.grillSize || product.material) && (
+            <div className="mb-10 p-5 rounded-xl bg-obsidian-900/60 border border-obsidian-700/50 backdrop-blur-sm">
+              <h2 className="font-heading text-xs uppercase tracking-[0.2em] text-fire-500 mb-3">
+                Lo Esencial
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 text-sm">
+                <div>
+                  <p className="text-obsidian-500 text-xs">Modelo</p>
+                  <p className="font-heading font-semibold text-white">{product.name}</p>
+                </div>
+                {product.guestCapacity && (
+                  <div>
+                    <p className="text-obsidian-500 text-xs">Capacidad</p>
+                    <p className="font-heading font-semibold text-white">{product.guestCapacity}</p>
+                  </div>
+                )}
+                {product.grillSize && (
+                  <div>
+                    <p className="text-obsidian-500 text-xs">Parrilla</p>
+                    <p className="font-heading font-semibold text-white">{product.grillSize}</p>
+                  </div>
+                )}
+                <div>
+                  <p className="text-obsidian-500 text-xs">Precio</p>
+                  <p className="font-heading font-semibold text-fire-400">{formatCurrency(product.basePrice)}</p>
+                </div>
+                {product.freeShipping && (
+                  <div>
+                    <p className="text-obsidian-500 text-xs">Envío</p>
+                    <p className="font-heading font-semibold text-cenote-400">Gratis</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16">
             {/* Gallery */}
             <ProductGallery images={product.images} productName={product.name} />
@@ -190,9 +256,7 @@ export default function ProductDetail() {
                   <ul className="space-y-2">
                     {includes.map((item: string, i: number) => (
                       <li key={i} className="flex items-center gap-2 text-obsidian-300">
-                        <svg className="w-4 h-4 text-jade-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                        </svg>
+                        <Icon name="check" className="w-4 h-4 text-jade-600 flex-shrink-0" strokeWidth={2} />
                         {item}
                       </li>
                     ))}

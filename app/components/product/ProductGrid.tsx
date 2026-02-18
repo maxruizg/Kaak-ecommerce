@@ -1,17 +1,5 @@
 import { ProductCard } from "./ProductCard";
-
-interface Product {
-  slug: string;
-  name: string;
-  mayaName?: string | null;
-  basePrice: number;
-  comparePrice?: number | null;
-  isFeatured: boolean;
-  isRentable: boolean;
-  freeShipping: boolean;
-  images: { url: string; alt?: string | null }[];
-  category: { name: string };
-}
+import type { Product } from "~/lib/products.data";
 
 interface ProductGridProps {
   products: Product[];
@@ -21,7 +9,7 @@ export function ProductGrid({ products }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="text-obsidian-500 text-lg">No se encontraron productos.</p>
+        <p className="text-obsidian-400 text-lg">No se encontraron productos.</p>
       </div>
     );
   }

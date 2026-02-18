@@ -1,26 +1,23 @@
 import { Link } from "@remix-run/react";
 import { cn, formatCurrency } from "~/lib/utils";
 import { Badge } from "~/components/ui/Badge";
+import { Icon } from "~/components/ui/Icon";
 import { LazyImage } from "~/components/media/LazyImage";
+import type { Product } from "~/lib/products.data";
+
+type ProductCardProduct = Pick<
+  Product,
+  "slug" | "name" | "mayaName" | "basePrice" | "comparePrice" | "isFeatured" | "isRentable" | "freeShipping" | "guestCapacity" | "grillSize" | "images"
+> & { category: { name: string } };
 
 interface ProductCardProps {
-  product: {
-    slug: string;
-    name: string;
-    mayaName?: string | null;
-    basePrice: number;
-    comparePrice?: number | null;
-    isFeatured: boolean;
-    isRentable: boolean;
-    freeShipping: boolean;
-    images: { url: string; alt?: string | null }[];
-    category: { name: string };
-  };
+  product: ProductCardProduct;
   className?: string;
   index?: number;
+  featured?: boolean;
 }
 
-export function ProductCard({ product, className, index = 0 }: ProductCardProps) {
+export function ProductCard({ product, className, index = 0, featured }: ProductCardProps) {
   const primaryImage = product.images[0];
   const discount = product.comparePrice
     ? Math.round(((product.comparePrice - product.basePrice) / product.comparePrice) * 100)
@@ -30,8 +27,9 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
     <Link
       to={`/productos/${product.slug}`}
       className={cn(
-        "group block bg-obsidian-900/60 backdrop-blur-sm rounded-xl border border-obsidian-700/50 overflow-hidden",
+        "group block bg-obsidian-900/60 backdrop-blur-sm rounded-xl overflow-hidden",
         "transition-all duration-300 hover:shadow-fire-500/10 hover:shadow-lg hover:border-obsidian-600 hover:-translate-y-1",
+        featured ? "gradient-border" : "border border-obsidian-700/50",
         className
       )}
       style={{ transitionDelay: `${index * 75}ms` }}
@@ -42,15 +40,13 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
           <LazyImage
             src={primaryImage.url}
             alt={primaryImage.alt || product.name}
-            className="w-full h-full"
+            className="w-full h-full transition-transform duration-500 group-hover:scale-105"
             width={400}
             height={300}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-obsidian-600">
-            <svg className="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
-            </svg>
+            <Icon name="image" className="w-16 h-16" strokeWidth={1} />
           </div>
         )}
 
@@ -74,9 +70,27 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
           {product.name}
         </h3>
         {product.mayaName && (
-          <p className="text-sm text-obsidian-500 italic mt-0.5">
+          <p className="text-sm text-obsidian-400 italic mt-0.5">
             "{product.mayaName}"
           </p>
+        )}
+
+        {/* At-a-glance specs */}
+        {(product.guestCapacity || product.grillSize) && (
+          <div className="flex items-center gap-3 mt-2 text-xs text-obsidian-400">
+            {product.guestCapacity && (
+              <span className="flex items-center gap-1">
+                <Icon name="users" className="w-3.5 h-3.5" />
+                {product.guestCapacity}
+              </span>
+            )}
+            {product.grillSize && (
+              <span className="flex items-center gap-1">
+                <Icon name="fire" className="w-3.5 h-3.5" />
+                {product.grillSize}
+              </span>
+            )}
+          </div>
         )}
 
         {/* Price */}
@@ -92,7 +106,7 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
               <span className="text-sm font-heading text-obsidian-400">
                 {formatCurrency(product.basePrice)}
               </span>
-              <span className="text-xs text-obsidian-500">Compra</span>
+              <span className="text-xs text-obsidian-400">Compra</span>
             </div>
           </div>
         ) : (
@@ -101,7 +115,7 @@ export function ProductCard({ product, className, index = 0 }: ProductCardProps)
               {formatCurrency(product.basePrice)}
             </span>
             {product.comparePrice && (
-              <span className="text-sm text-obsidian-500 line-through">
+              <span className="text-sm text-obsidian-400 line-through">
                 {formatCurrency(product.comparePrice)}
               </span>
             )}

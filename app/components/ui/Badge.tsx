@@ -8,12 +8,12 @@ interface BadgeProps {
 
 export function Badge({ children, variant = "default", size = "sm" }: BadgeProps) {
   const variants = {
-    default: "bg-obsidian-100 text-obsidian-700",
-    fire: "bg-fire-100 text-fire-700",
-    ember: "bg-ember-100 text-ember-700",
-    jade: "bg-jade-400/20 text-jade-700",
-    crimson: "bg-crimson-400/20 text-crimson-700",
-    obsidian: "bg-obsidian-800 text-white",
+    default: "bg-obsidian-800 text-obsidian-300",
+    fire: "bg-fire-900/40 text-fire-400 border border-fire-800/40",
+    ember: "bg-ember-900/40 text-ember-400 border border-ember-800/40",
+    jade: "bg-jade-400/15 text-jade-400",
+    crimson: "bg-crimson-400/15 text-crimson-400",
+    obsidian: "bg-obsidian-700 text-obsidian-200",
   };
 
   const sizes = {

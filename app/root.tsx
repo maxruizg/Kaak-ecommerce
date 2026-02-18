@@ -21,7 +21,7 @@ export const links: LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;700&family=Josefin+Sans:wght@300;400;600;700&display=swap",
   },
   { rel: "stylesheet", href: styles },
 ];
@@ -40,6 +40,16 @@ export const meta: MetaFunction = () => {
       property: "og:description",
       content: "Barriles asadores profesionales inspirados en la cultura Maya milenaria.",
     },
+    { property: "og:image", content: "/og-image.jpg" },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "K'Á-AK — Barriles Asadores Profesionales" },
+    {
+      name: "twitter:description",
+      content: "Barriles asadores profesionales inspirados en la cultura Maya milenaria.",
+    },
+    { name: "twitter:image", content: "/og-image.jpg" },
   ];
 };
 
@@ -63,6 +73,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="font-body antialiased bg-obsidian-950 text-obsidian-100">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-fire-600 focus:text-white focus:rounded-lg focus:outline-none"
+        >
+          Saltar al contenido principal
+        </a>
         {children}
         <ScrollRestoration />
         <Scripts />
